@@ -48,12 +48,12 @@ list_of_original_images = get_images()
 # https://stackoverflow.com/a/48066158
 
 # Function to convert an image to WebP format
-def convert_to_webp(image, index):
+def convert_to_webp(image, index, prefix):
     try:
         quality = 80
         filename, extension = image, image.split('.')[1]
         filename_without_extension = filename.replace('.{}'.format(extension), '')
-        output_file = "{}.webp".format(index)
+        output_file = "{} - {}.webp".format(prefix, index)
         command = 'cwebp -q {} "{}" -o "{}"'.format(quality, image, output_file)
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, error = process.communicate()
@@ -68,6 +68,7 @@ def convert_to_webp(image, index):
         print("An error occurred during conversion:", e)
 
 
+
 # Directory containing the photos
 photos_dir = "/home/jef/PythonScripts/WebP-Conververter/photos"
 
@@ -75,7 +76,7 @@ photos_dir = "/home/jef/PythonScripts/WebP-Conververter/photos"
 for index, filename in enumerate(os.listdir(photos_dir), start=1):
     if filename.endswith(('.jpg', '.jpeg', '.png')):
         image_path = os.path.join(photos_dir, filename)
-        convert_to_webp(image_path, index)
+        convert_to_webp(image_path, index, 'HFF2023')
 
         
 

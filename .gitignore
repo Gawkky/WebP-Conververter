@@ -1,1 +1,6 @@
 /photos
+/webp
+*.jpg
+*.jpeg
+*.png
+*.webp

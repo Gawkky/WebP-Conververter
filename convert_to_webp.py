@@ -31,34 +31,53 @@ are_images_converted = os.path.exists(os.path.join(os.curdir, dir_name))
 # Function to get all the images from a given directory
 def get_images():
     try:
-        list_of_images = os.listdir(os.curdir)
+        list_of_images = os.listdir(f"{os.curdir}/photos")
         images = list()
 
         for image in list_of_images:
             if image.endswith(extensions):
                 images.append(image)
-
         return(images)
     except:
         pass
+
 
 list_of_original_images = get_images()   
 
 # Function to convert the images to WebP format 
 # https://stackoverflow.com/a/48066158
-def convert_to_webp(image):
-        try:
-            quality = 80
-            filename, extension = image, image.split('.')[1]
-            filename_without_extension = filename.replace(
-                    '.{}'.format(extension), '')
-            command = 'cwebp -q {} "{}" -o "{}.webp"'.format(
-            quality, filename, filename_without_extension)
-            process = subprocess.Popen(command, stdout=subprocess.PIPE)
-            output, error = process.communicate()
 
-        except:
-            pass
+# Function to convert an image to WebP format
+def convert_to_webp(image, index):
+    try:
+        quality = 80
+        filename, extension = image, image.split('.')[1]
+        filename_without_extension = filename.replace('.{}'.format(extension), '')
+        output_file = "{}.webp".format(index)
+        command = 'cwebp -q {} "{}" -o "{}"'.format(quality, image, output_file)
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, error = process.communicate()
+
+        # Check if there was any error during the conversion
+        if error:
+            print("Conversion failed for {}: {}".format(image, error.decode()))
+        else:
+            print("Conversion successful for", image)
+
+    except Exception as e:
+        print("An error occurred during conversion:", e)
+
+
+# Directory containing the photos
+photos_dir = "/home/jef/PythonScripts/WebP-Conververter/photos"
+
+# Iterate over each file in the directory
+for index, filename in enumerate(os.listdir(photos_dir), start=1):
+    if filename.endswith(('.jpg', '.jpeg', '.png')):
+        image_path = os.path.join(photos_dir, filename)
+        convert_to_webp(image_path, index)
+
+        
 
 # Function to move the webp images to a new folder
 # https://stackoverflow.com/a/36091444

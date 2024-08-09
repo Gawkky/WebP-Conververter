@@ -1,5 +1,6 @@
 import os
 import subprocess
+import shutil
 from os.path import splitext
 
 # Define the directory names and extensions
@@ -44,3 +45,5 @@ if not os.path.exists(webp_location):
 
 # Process the 'photos' directory
 process_directory(photos_location, webp_location)
+
+shutil.make_archive(webp_location, 'zip', webp_location)
